@@ -8,17 +8,14 @@ interface FishCardProps {
 
 export default function FishCard({ name, image, price }: FishCardProps) {
   return (
-    <div className="bg-white rounded-lg overflow-hidden ">
+    <div className="bg-white rounded-lg overflow-hidden w-72">
       {/* Product Image */}
-      <div className="relative p-4">
+      <div className="p-4">
         <img
           src="https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2024/09/2024.09.26_D_62_12-74.jpg"
           alt="Koi Fish"
           className=""
         />
-        <span className="absolute top-2 right-2 text-white text-sm bg-black bg-opacity-60 px-2 py-1 rounded">
-          koi fish
-        </span>
       </div>
 
       {/* Product Details */}
