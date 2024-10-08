@@ -1,6 +1,6 @@
 import MainLayout from '@/components/layouts/MainLayout';
 
-export default function UserLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
