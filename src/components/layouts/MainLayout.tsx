@@ -10,7 +10,7 @@ export default function MainLayout({
   return (
     <div>
       <div className="bg-primary">
-        <div className="mx-auto px-8 flex justify-between items-center">
+        <div className="mx-auto px-8 py-1 flex justify-between items-center">
           <div className="text-white">
             <span className="mr-2 text-sm">800-351-6851</span>|
             <a href="#" className="text-sm ml-2 hover:underline transition duration-300">
@@ -32,10 +32,10 @@ export default function MainLayout({
       <nav className="bg-white shadow-md">
         <div className="mx-auto px-8">
           <div className="flex justify-between items-center py-2">
-            <div className="text-xl font-bold italic">
+            <Link href="/" className="text-2xl font-bold italic">
               <span className="text-red-600">KOI</span>
               <span className="text-teal-900">GARDEN</span>
-            </div>
+            </Link>
             <div className="flex gap-6">
               {[
                 "SHOP ALL",
@@ -48,7 +48,7 @@ export default function MainLayout({
                 <a
                   key={item}
                   href="#"
-                  className="text-gray-700 text-sm font-bold hover:text-teal-900 relative group transition duration-300"
+                  className="text-gray-700 text-base font-bold hover:text-teal-900 relative group transition duration-300"
                 >
                   {item}
                   <span className=" absolute left-0 right-0 bottom-0 h-0.5 bg-teal-900 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>

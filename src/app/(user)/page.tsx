@@ -4,7 +4,7 @@ import KoiFishList from "./components/KoiFishList";
 
 export default async function Home() {
   return (
-    <div className="p-4">
+    <div className="px-2">
       <div className="h-[calc(100vh-4rem)]">
         <Hero />
       </div>

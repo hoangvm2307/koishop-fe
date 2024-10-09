@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default async function Hero() {
   return (
-    <div className="grid grid-cols-4 gap-4 h-full">
+    <div className="grid grid-cols-4 gap-2 h-full">
       {/* Left large image */}
       <div className="col-span-2 relative">
         <Image
@@ -18,7 +18,7 @@ export default async function Hero() {
       </div>
 
       {/* Right images with text */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-4 col-span-2">
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 col-span-2">
         <div className="relative">
           <Image
             src="https://images.pexels.com/photos/1699204/pexels-photo-1699204.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
