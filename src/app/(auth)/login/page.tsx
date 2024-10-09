@@ -4,15 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import api from "@/lib/axios";
+import { LoginFormData, loginUser } from "@/lib/api/auth";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-interface LoginFormData {
-  username: string;
-  password: string;
-}
+import Link from 'next/link';
 
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
@@ -20,19 +16,18 @@ export default function LoginPage() {
   const router = useRouter();
 
   const loginMutation = useMutation({
-    mutationFn: (data: LoginFormData) => 
-      api.post("/api/account/login", data),
+    mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log("Đăng nhập thành công", data);
+      console.log("Login successful", data);
       router.push("/dashboard");
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        setError(error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.");
+        setError(error.response?.data?.message || "Login failed. Please try again.");
       } else {
-        setError("Đã xảy ra lỗi không xác định.");
+        setError("An unknown error occurred.");
       }
-      console.error("Đăng nhập thất bại", error);
+      console.error("Login failed", error);
     },
   });
 
@@ -93,9 +88,9 @@ export default function LoginPage() {
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
         Don't have an account?{" "}
-        <a href="#" className="font-medium text-primary hover:text-primary-dark">
+        <Link href="/register" className="font-medium text-primary hover:text-primary-dark">
           Register now
-        </a>
+        </Link>
       </p>
     </div>
   );
