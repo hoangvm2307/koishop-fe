@@ -4,12 +4,10 @@ import KoiFishList from "./components/KoiFishList";
 import Hero from "./components/Hero";
 import CustomerBenefits from "./components/CustomerBenefits";
 
-const queryClient = new QueryClient();
-
 export default function Home() {
   return (
-    <QueryClientProvider client={queryClient}>
-     <div className="h-[calc(100vh-4rem)]">
+    <>
+      <div className="h-[calc(100vh-4rem)]">
         <Hero />
       </div>
 
@@ -19,6 +17,6 @@ export default function Home() {
       <div className="py-8 px-12">
         <KoiFishList />
       </div>
-    </QueryClientProvider>
+    </>
   );
 }
