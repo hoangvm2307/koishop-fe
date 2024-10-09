@@ -33,24 +33,23 @@ export default function RegisterPage() {
   });
 
   const onSubmit = (data: RegisterFormDataWithConfirmation) => {
-    // Loại bỏ confirmPassword trước khi gửi dữ liệu
     const { confirmPassword, ...registerData } = data;
     registerMutation.mutate(registerData);
   };
 
   return (
     <div className="container mx-auto mt-20 max-w-md">
-      <h1 className="text-2xl font-bold mb-6 text-center">ĐĂNG KÝ</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">REGISTER</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label htmlFor="username" className="block text-sm font-bold text-gray-700 mb-1">
-            Tên người dùng
+            Username
           </label>
           <Input 
             type="text" 
             id="username" 
-            {...register("username", { required: "Tên người dùng là bắt buộc" })} 
-            placeholder="Nhập tên người dùng" 
+            {...register("username", { required: "Username is required" })} 
+            placeholder="Enter your username" 
           />
           {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>}
         </div>
@@ -62,80 +61,84 @@ export default function RegisterPage() {
             type="email" 
             id="email" 
             {...register("email", { 
-              required: "Email là bắt buộc",
+              required: "Email is required",
               pattern: {
                 value: /\S+@\S+\.\S+/,
-                message: "Email không hợp lệ"
+                message: "Invalid email address"
               }
             })} 
-            placeholder="Nhập email của bạn" 
+            placeholder="Enter your email" 
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="phoneNumber" className="block text-sm font-bold text-gray-700 mb-1">
-            Số điện thoại
+            Phone Number
           </label>
           <Input 
             type="tel" 
             id="phoneNumber" 
             {...register("phoneNumber", { 
-              required: "Số điện thoại là bắt buộc",
+              required: "Phone number is required",
               pattern: {
                 value: /^[0-9]{10}$/,
-                message: "Số điện thoại không hợp lệ (phải có 10 chữ số)"
+                message: "Invalid phone number (must be 10 digits)"
               }
             })} 
-            placeholder="Nhập số điện thoại của bạn" 
+            placeholder="Enter your phone number" 
           />
           {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber.message}</p>}
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-1">
-            Mật khẩu
+            Password
           </label>
           <Input 
             type="password" 
             id="password" 
             {...register("password", { 
-              required: "Mật khẩu là bắt buộc",
+              required: "Password is required",
               minLength: {
                 value: 8,
-                message: "Mật khẩu phải có ít nhất 8 ký tự"
+                message: "Password must be at least 8 characters long"
               }
             })} 
-            placeholder="Nhập mật khẩu" 
+            placeholder="Enter your password" 
           />
           {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
         </div>
         <div>
           <label htmlFor="confirmPassword" className="block text-sm font-bold text-gray-700 mb-1">
-            Xác nhận mật khẩu
+            Confirm Password
           </label>
           <Input 
             type="password" 
             id="confirmPassword" 
             {...register("confirmPassword", { 
-              required: "Xác nhận mật khẩu là bắt buộc",
+              required: "Confirm password is required",
               validate: (val: string) => {
                 if (watch('password') != val) {
-                  return "Mật khẩu không khớp";
+                  return "Passwords do not match";
                 }
               }
             })}
-            placeholder="Xác nhận mật khẩu" 
+            placeholder="Confirm your password" 
           />
-          {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.confirmPassword.message}
+            </p>
+          )}
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
         <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
-          {registerMutation.isPending ? "Đang đăng ký..." : "Đăng ký"}
+          {registerMutation.isPending ? "Registering..." : "Register"}
         </Button>
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
-        Đã có tài khoản?{" "}
+        Already have an account?{" "}
         <Link href="/login" className="font-medium text-primary hover:text-primary-dark">
-          Đăng nhập ngay
+          Login now
         </Link>
       </p>
     </div>
