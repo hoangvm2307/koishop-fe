@@ -12,7 +12,7 @@ export default async function Home() {
       <div className="py-8">
         <CustomerBenefits />
       </div>
-      <div className="py-8 px-44">
+      <div className="py-8 px-12">
         <KoiFishList />
       </div>
     </div>
