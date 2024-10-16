@@ -1,25 +1,27 @@
 import React from "react";
 import { ShoppingCart, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface FishCardProps {
+  id: string;
   name: string;
   image: string;
   price: number;
   size: string;
 }
 
-export default function FishCard({ name, image, price, size }: FishCardProps) {
+export default function FishCard({ id, name, image, price, size }: FishCardProps) {
   return (
     <div className="bg-white rounded-lg overflow-hidden w-64 ">
       {/* Product Image */}
-      <div className="relative">
+      <Link href={`/fish/${id}`} className="relative block">
         <img
           src={image}
           alt={name}
-          className="w-full h-64 object-cover"
+          className="w-full h-64 object-cover cursor-pointer"
         />
-      </div>
+      </Link>
 
       {/* Product Details */}
       <div className="p-4">

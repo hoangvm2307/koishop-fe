@@ -21,8 +21,9 @@ export default function KoiFishList() {
       {koiFishes?.map((fish) => (
         <FishCard
           key={fish.id}
+          id={fish.id}
           name={fish.name}
-          image={fish.image}
+          image={"https://d2e07cbkdk0gwy.cloudfront.net/wp-content/uploads/2024/10/2024.10.10_G_090_13-23.jpg"}
           price={fish.price}
           size={fish.size}
         />
