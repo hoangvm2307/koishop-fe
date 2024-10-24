@@ -9,17 +9,19 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from 'next/link';
+ 
 
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const router = useRouter(); 
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
       console.log("Login successful", data);
-      router.push("/dashboard");
+      localStorage.setItem("user", JSON.stringify(data.user));
+      router.push("/cart");
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {

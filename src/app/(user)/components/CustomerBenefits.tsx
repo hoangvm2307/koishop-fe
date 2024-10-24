@@ -1,6 +1,6 @@
 import { Calendar, Heart, Truck } from "lucide-react";
 
-export default async function CustomerBenefits() {
+export default function CustomerBenefits() {
   return (
     <div className="grid grid-cols-3 gap-4">
       {/* Overnight Shipping */}

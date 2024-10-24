@@ -1,14 +1,44 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { User, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Badge } from "../ui/badge";
+import { getCartItems } from "@/lib/cartUtils";
 export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [username, setUsername] = useState<string | null>(null);
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const userData = JSON.parse(user);
+      setUsername(userData.userName);
+    }
+
+    const updateCartCount = () => {
+      const cartItems = getCartItems();
+      setCartItemCount(cartItems.length);
+    };
+
+    updateCartCount();
+
+    window.addEventListener("cartUpdated", updateCartCount);
+
+    return () => {
+      window.removeEventListener("cartUpdated", updateCartCount);
+    };
+  }, []);
+
   return (
     <div>
+      <ToastContainer />
       <div className="bg-primary">
         <div className="mx-auto px-8 py-1 flex justify-between items-center">
           <div className="text-white">
@@ -18,14 +48,29 @@ export default function MainLayout({
             </a>
           </div>
           <div className="flex items-center ">
-            <Link href="/login">
-              <Button variant="default" size="icon">
-                <User className="h-4 w-4" />
+            {username ? (
+              <Link href="/profile">
+                <Button variant="ghost" className="text-white hover:bg-primary hover:text-neutral-400">
+                  {username}
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/login">
+                <Button variant="default" size="icon">
+                  <User className="h-4 w-4" />
+                </Button>
+              </Link>
+            )}
+            <Link href="/cart">
+              <Button variant="default" size="icon" className="relative">
+                <ShoppingCart className="h-4 w-4" />
+                {cartItemCount > 0 && (
+                  <Badge variant="destructive" className="absolute -top-0 -right-1 px-1 py-0 text-xs">
+                    {cartItemCount}
+                  </Badge>
+                )}
               </Button>
             </Link>
-            <Button variant="default" size="icon">
-              <ShoppingCart className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       </div>

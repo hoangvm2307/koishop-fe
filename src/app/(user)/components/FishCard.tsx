@@ -1,8 +1,12 @@
+"use client";
 import React from "react";
 import { ShoppingCart, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { getCartItems, updateCart } from "@/lib/cartUtils";
+ 
 interface FishCardProps {
   id: string;
   name: string;
@@ -12,15 +16,21 @@ interface FishCardProps {
 }
 
 export default function FishCard({ id, name, image, price, size }: FishCardProps) {
+  const router = useRouter();
+  const handleAddToCart = () => {
+    const currentCart = getCartItems();
+    const newCart = [...currentCart, id];
+    updateCart(newCart);
+
+    // Thông báo cho người dùng
+    toast.success("Added to cart");
+  };
   return (
     <div className="bg-white rounded-lg overflow-hidden w-64 ">
+     
       {/* Product Image */}
-      <Link href={`/fish/${id}`} className="relative block">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-64 object-cover cursor-pointer"
-        />
+      <Link href={`/catalog/${id}`} className="relative block">
+        <img src={image} alt={name} className="w-full h-64 object-cover cursor-pointer" />
       </Link>
 
       {/* Product Details */}
@@ -31,7 +41,10 @@ export default function FishCard({ id, name, image, price, size }: FishCardProps
 
         {/* Action Buttons */}
         <div className="flex justify-between items-center">
-          <Button className="flex items-center justify-center   text-white text-sm font-semibold py-2 px-4 rounded">
+          <Button
+            onClick={handleAddToCart}
+            className="flex items-center justify-center   text-white text-sm font-semibold py-2 px-4 rounded"
+          >
             <ShoppingCart className="w-4 h-4 mr-2" />
             ADD TO CART
           </Button>

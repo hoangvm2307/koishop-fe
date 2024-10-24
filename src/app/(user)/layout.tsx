@@ -1,5 +1,7 @@
+"use client";
 import MainLayout from "@/components/layouts/MainLayout";
 import QueryProvider from "@/components/provider/QueryProvider";
+
 
 export default function UserLayout({
   children,
@@ -8,7 +10,7 @@ export default function UserLayout({
 }>) {
   return (
     <QueryProvider>
-      <MainLayout>{children}</MainLayout>;
+      <MainLayout>{children}</MainLayout>
     </QueryProvider>
   );
 }

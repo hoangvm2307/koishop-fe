@@ -10,12 +10,11 @@ export default function Home() {
       <div className="h-[calc(100vh-4rem)]">
         <Hero />
       </div>
-
       <div className="py-8">
         <CustomerBenefits />
       </div>
       <div className="py-8 px-12">
-        <KoiFishList />
+        <KoiFishList filters={{}} />
       </div>
     </>
   );
