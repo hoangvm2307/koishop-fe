@@ -9,8 +9,11 @@ import { FilterData } from "@/lib/api/koifishApi";
 
 export default function Catalog() {
   const [filters, setFilters] = useState<Partial<FilterData>>({});
+  const [page, setPage] = useState(1);
+
   const handleFilterChange = (newFilters: Partial<FilterData>) => {
     setFilters(newFilters);
+    setPage(1);
   };
 
   return (
@@ -28,11 +31,13 @@ export default function Catalog() {
               <FilterSidebar onFilterChange={handleFilterChange} />
             </div>
             <div className="md:col-span-3">
-              <SortResultsBar />
-              <KoiFishList filters={filters} />
+              <div className="mb-4">
+                <SortResultsBar />
+              </div>
+              <KoiFishList filters={filters} page={page} setPage={setPage} />
             </div>
           </div>
-        </section>  
+        </section>
       </main>
     </div>
   );

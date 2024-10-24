@@ -30,7 +30,7 @@ export default function FishCard({ id, name, image, price, size }: FishCardProps
      
       {/* Product Image */}
       <Link href={`/catalog/${id}`} className="relative block">
-        <img src={image} alt={name} className="w-full h-64 object-cover cursor-pointer" />
+        <img src={image} alt={name} className="w-full h-64 object-contain cursor-pointer" />
       </Link>
 
       {/* Product Details */}

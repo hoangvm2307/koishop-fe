@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Badge } from "../ui/badge";
 import { getCartItems } from "@/lib/cartUtils";
+import Footer from "./Footer";
 export default function MainLayout({
   children,
 }: Readonly<{
@@ -104,6 +105,7 @@ export default function MainLayout({
         </div>
       </nav>
       {children}
+      <Footer />
     </div>
   );
 }

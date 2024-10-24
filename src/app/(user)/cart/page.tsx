@@ -120,7 +120,7 @@ export default function CartPage() {
                   <TableCell>
                     <div className="flex items-center">
                       <Checkbox id={`check-${item.id}`} className="mr-4" />
-                      <Image src={item.image} alt={item.name} width={80} height={80} className="mr-4" />
+                      <Image src={item.imageUrl} alt={item.name} width={80} height={80} className="mr-4" />
                       <div>
                         <p className="font-semibold">{item.name}</p>
                         <p className="text-sm text-gray-600">Warranty: </p>
