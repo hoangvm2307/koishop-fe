@@ -8,7 +8,7 @@ interface RatingCreationDto {
 }
 export interface Rating extends RatingCreationDto {
   id: number;
-  createdAt: string;
+  dateCreated: string;
   userName: string;
 }
 export const postRating = async (data: RatingCreationDto) => {

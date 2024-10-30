@@ -19,7 +19,7 @@ export default function FishCard({ id, name, image, price, size }: FishCardProps
   const router = useRouter();
   const handleAddToCart = () => {
     const currentCart = getCartItems();
-    const newCart = [...currentCart, id];
+    const newCart = [...currentCart, Number(id)];
     updateCart(newCart);
 
     // Thông báo cho người dùng

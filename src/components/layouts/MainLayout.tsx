@@ -101,6 +101,9 @@ export default function MainLayout({
                 </a>
               ))}
             </div>
+            <Button variant="default">
+              <Link className="text-white" href="/consignment">SELL YOUR KOI</Link>
+            </Button>
           </div>
         </div>
       </nav>

@@ -6,6 +6,7 @@ interface OrderItemCreationDto {
 
 interface OrderCreationDto {
   orderItemCreationDtos: OrderItemCreationDto[];
+  isConsignment: boolean
 }
 export interface Order {
   id: number;

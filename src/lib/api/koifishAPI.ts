@@ -23,6 +23,22 @@ export interface KoiFish {
   gender: string;
   dailyFoodAmount: string;
 }
+
+export interface KoiFishCreate {
+   name: string;
+   origin: string;
+   gender: string;
+   age: number;
+   size: number;
+   personality: string;
+   dailyFoodAmount: number;
+   type: string;
+   price: number;
+   listPrice: number;
+   imageUrl: string;
+   status: string;
+   userId: number;
+}
 export interface NumericFilterData {
   minPrice: number;
   maxPrice: number;
@@ -96,3 +112,8 @@ export const getKoiFishByIds = async (ids: string[]) => {
   });
   return response.data;
 };
+
+export const createKoiFish = async (userId: number, data: KoiFishCreate) => {
+  const response = await api.post(`/api/KoiFish/${userId}`, data);
+  return response.data;
+}

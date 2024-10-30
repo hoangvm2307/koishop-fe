@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,14 +15,20 @@ import { createPaymentLink } from "@/lib/api/vnpayApi";
 import { getKoiFishByIds, KoiFish } from "@/lib/api/koifishApi";
 
 export default function CartPage() {
+  // States for cart management and options
   const [cartItems, setCartItems] = React.useState<KoiFish[]>([]);
-
   const [couponCode, setCouponCode] = React.useState("");
+  const [isConsignment, setIsConsignment] = useState(false);
+  const [consignmentDuration, setConsignmentDuration] = useState(1);
+
   const router = useRouter();
+
+  // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const tax = 0;
   const total = subtotal + tax;
 
+  // Fetch cart items from localStorage
   const { data: koiFishData, isLoading } = useQuery({
     queryKey: ["cartKoiFish"],
     queryFn: async () => {
@@ -32,37 +38,38 @@ export default function CartPage() {
     },
   });
 
-
+  // Update cart items state when data is fetched
   useEffect(() => {
     if (koiFishData) {
       setCartItems(koiFishData);
     }
   }, [koiFishData]);
 
+  // Create order mutation
   const orderMutation = useMutation({
     mutationFn: createOrder,
     onSuccess: async (data) => {
+      // Clear cart after successful order
       localStorage.removeItem("cart");
       const orderId = data.id.toString();
 
       toast.success("Order created successfully");
 
       try {
+        // Create VNPAY payment link
         const paymentData = await createPaymentLink({ orderId, amount: 10000 });
         console.log(paymentData);
 
+        // Redirect to payment or confirmation page
         if (paymentData.paymentUrl) {
           window.location.href = paymentData.paymentUrl;
         } else {
-          // if paymentUrl is null, redirect to order confirmation page
           router.push(`/order-confirmation/${orderId}`);
         }
       } catch (error) {
         console.error("Failed to create payment link:", error);
         toast.error("Failed to create payment link. Please try again.");
-        // router.push(`/order-confirmation/${orderId}`);
       }
-      // router.push("/order-confirmation");
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
@@ -73,6 +80,8 @@ export default function CartPage() {
       toast.error("Failed to order. Please try again.");
     },
   });
+
+  // Handle checkout process
   const handleCheckout = async () => {
     // Get cart items from localStorage
     const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -82,11 +91,14 @@ export default function CartPage() {
       koiFishId: parseInt(koiFishId),
     }));
     console.log(orderItemCreationDtos);
+
     // Call API to create order
     orderMutation.mutate({
       orderItemCreationDtos,
+      isConsignment,
     });
   };
+
   const handleRemoveProducts = () => {
     // Handle removing selected products
   };
@@ -112,6 +124,7 @@ export default function CartPage() {
                 <TableHead className="text-right">SIZE</TableHead>
                 <TableHead className="text-right">TOTAL</TableHead>
                 <TableHead className="text-right">PRICE</TableHead>
+                <TableHead className="text-right">CONSIGNMENT</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -120,7 +133,13 @@ export default function CartPage() {
                   <TableCell>
                     <div className="flex items-center">
                       <Checkbox id={`check-${item.id}`} className="mr-4" />
-                      <Image src={item.imageUrl} alt={item.name} width={80} height={80} className="mr-4" />
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.name}
+                        width={80}
+                        height={80}
+                        className="mr-4"
+                      />
                       <div>
                         <p className="font-semibold">{item.name}</p>
                         <p className="text-sm text-gray-600">Warranty: </p>
@@ -168,7 +187,30 @@ export default function CartPage() {
                   </Button>
                 </div>
               </div>
-
+              <div className="border-t pt-4 mb-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Checkbox
+                    id="consignment"
+                    checked={isConsignment}
+                    onCheckedChange={(checked) => setIsConsignment(checked as boolean)}
+                  />
+                  <label htmlFor="consignment">Consign entire order</label>
+                </div>
+                {isConsignment && (
+                  <div>
+                    <label htmlFor="consignmentDuration" className="block mb-1">
+                      Consignment duration (months):
+                    </label>
+                    <Input
+                      id="consignmentDuration"
+                      type="number"
+                      value={consignmentDuration}
+                      onChange={(e) => setConsignmentDuration(Number(e.target.value))}
+                      min={1}
+                    />
+                  </div>
+                )}
+              </div>
               <div className="border-t pt-4">
                 <div className="flex justify-between mb-2">
                   <span>Subtotal:</span>

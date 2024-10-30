@@ -10,8 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "react-toastify";
 import { postRating } from "@/lib/api/ratingApi";
+import { getCartItems, updateCart } from "@/lib/cartUtils";
 
 export default function KoifishDetails({ params }: { params: { id: string } }) {
+  const user = localStorage.getItem("user");
+  const userObj = user ? JSON.parse(user) : null;
   const {
     data: koiFish,
     isLoading,
@@ -35,6 +38,15 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
       toast.error("Error submitting rating");
     },
   });
+  const handleAddToCart = () => {
+    const currentCart = getCartItems();
+    //par
+    const newCart = [...currentCart, Number(params.id)];
+    updateCart(newCart);
+
+    // Thông báo cho người dùng
+    toast.success("Added to cart");
+  };
   const handleRatingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) {
@@ -44,12 +56,13 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
     ratingMutation.mutate({
       ratingValue: rating,
       comment,
-      userId: 1, // Thay thế bằng ID người dùng thực tế
+      userId: userObj.id,
       koiFishId: Number(params.id),
     });
   };
+  console.log(koiFish?.ratings);
   const [newComment, setNewComment] = useState("");
-  console.log(koiFish?.dailyFoodAmount);
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading Koi fish information</div>;
   if (!koiFish) return <div>Koi fish information not found</div>;
@@ -75,7 +88,7 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
           <p className="text-lg font-semibold mb-4">Exact Fish Pictured</p>
           <p className="text-2xl font-bold text-primary mb-6">${koiFish.price.toFixed(2)}</p>
           <p className="text-green-600 mb-4">In Stock</p>
-          <Button className="w-full mb-6 flex items-center justify-center">
+          <Button onClick={handleAddToCart} className="w-full mb-6 flex items-center justify-center">
             <ShoppingCart className="mr-2" />
             ADD TO CART
           </Button>
@@ -190,7 +203,7 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
                   <div className="flex items-center space-x-2">
                     <h3 className="font-semibold">{rating.userName}</h3>
                     <span className="text-sm text-gray-500">
-                      {new Date(rating.createdAt).toLocaleDateString()}
+                      {new Date(rating.dateCreated).toLocaleDateString()}
                     </span>
                   </div>
                 </div>

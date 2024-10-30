@@ -73,7 +73,7 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <ImageUploader />
+      
 
       <div className="flex flex-col lg:flex-row gap-8">
         <Card className="lg:w-1/4 h-fit shadow-sm">
@@ -86,6 +86,9 @@ export default function ProfilePage() {
             </Button>
             <Button variant="ghost" className="w-full justify-start hover:bg-gray-100 transition-colors">
               <span className="mr-2">⭐</span> My Reviews
+            </Button>
+            <Button variant="ghost" className="w-full justify-start hover:bg-gray-100 transition-colors">
+              <span className="mr-2">🐟</span> My Koi Fishes
             </Button>
             <Button
               variant="ghost"
