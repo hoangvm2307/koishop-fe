@@ -2,7 +2,14 @@
 import { useQuery } from "@tanstack/react-query";
 import FishCard from "./FishCard";
 import { getKoiFishList, KoiFish, FilterData, PaginationInfo } from "@/lib/api/koifishApi";
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationNext } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationLink,
+  PaginationNext,
+} from "@/components/ui/pagination";
 
 interface KoiFishListProps {
   filters: Partial<FilterData>;
@@ -16,7 +23,7 @@ export default function KoiFishList({ filters, page, setPage }: KoiFishListProps
     Error
   >({
     queryKey: ["koiFishes", filters, page],
-    queryFn: () => getKoiFishList({ ...filters, PageNumber: page }),
+    queryFn: () => getKoiFishList({ ...filters, PageNumber: page, status: ["AVAILABLE"] }),
   });
 
   if (isLoading) return <div>Đang tải...</div>;
@@ -26,7 +33,7 @@ export default function KoiFishList({ filters, page, setPage }: KoiFishListProps
   const pagination = data?.pagination;
 
   console.log(pagination?.CurrentPage);
-   return (
+  return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-items-center">
         {koiFishes.map((fish) => (
@@ -46,15 +53,12 @@ export default function KoiFishList({ filters, page, setPage }: KoiFishListProps
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => setPage(Math.max(1, page - 1))}
-                className={page === 1 ? 'pointer-events-none opacity-50' : ''}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
             {[...Array(pagination.TotalPages)].map((_, index) => (
               <PaginationItem key={index}>
-                <PaginationLink
-                  onClick={() => setPage(index + 1)}
-                  isActive={page === index + 1}
-                >
+                <PaginationLink onClick={() => setPage(index + 1)} isActive={page === index + 1}>
                   {index + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -62,7 +66,7 @@ export default function KoiFishList({ filters, page, setPage }: KoiFishListProps
             <PaginationItem>
               <PaginationNext
                 onClick={() => setPage(Math.min(pagination.TotalPages, page + 1))}
-                className={page === pagination.TotalPages ? 'pointer-events-none opacity-50' : ''}
+                className={page === pagination.TotalPages ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
           </PaginationContent>

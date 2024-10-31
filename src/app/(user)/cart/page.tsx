@@ -13,6 +13,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { createPaymentLink } from "@/lib/api/vnpayApi";
 import { getKoiFishByIds, KoiFish } from "@/lib/api/koifishApi";
+import { getCartItems, updateCart } from "@/lib/cartUtils";
 
 export default function CartPage() {
   // States for cart management and options
@@ -20,6 +21,7 @@ export default function CartPage() {
   const [couponCode, setCouponCode] = React.useState("");
   const [isConsignment, setIsConsignment] = useState(false);
   const [consignmentDuration, setConsignmentDuration] = useState(1);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -99,8 +101,40 @@ export default function CartPage() {
     });
   };
 
+  const handleCheckboxChange = (fishId: string, checked: boolean) => {
+    setSelectedItems((prev) => {
+      if (checked) {
+        return [...prev, fishId];
+      } else {
+        return prev.filter((id) => id !== fishId);
+      }
+    });
+  };
+ 
   const handleRemoveProducts = () => {
-    // Handle removing selected products
+    if (selectedItems.length === 0) {
+      toast.warning("Vui lòng chọn sản phẩm cần xóa");
+      return;
+    }
+
+    // Lấy giỏ hàng hiện tại từ localStorage
+    const currentCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    // Lọc bỏ các sản phẩm đã chọn
+    const updatedCart = currentCart.filter((id: string) => !selectedItems.includes(id));
+
+    // Cập nhật localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Cập nhật state
+    setCartItems((prev) => prev.filter((item) => !selectedItems.includes(item.id)));
+
+    // Reset danh sách đã chọn
+    setSelectedItems([]);
+ 
+    const newCart = currentCart.filter((id: string) => !selectedItems.includes(id));
+    updateCart(newCart);
+    
   };
 
   const handleApplyCoupon = () => {
@@ -132,7 +166,12 @@ export default function CartPage() {
                 <TableRow key={item.id}>
                   <TableCell>
                     <div className="flex items-center">
-                      <Checkbox id={`check-${item.id}`} className="mr-4" />
+                      <Checkbox
+                        id={`check-${item.id}`}
+                        className="mr-4"
+                        checked={selectedItems.includes(item.id)}
+                        onCheckedChange={(checked) => handleCheckboxChange(item.id, checked as boolean)}
+                      />
                       <Image
                         src={item.imageUrl}
                         alt={item.name}

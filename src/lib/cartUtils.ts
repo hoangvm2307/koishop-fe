@@ -1,4 +1,4 @@
-export const updateCart = (items: Number[]) => {
+export const  updateCart = (items: Number[]) => {
   localStorage.setItem('cart', JSON.stringify(items));
   window.dispatchEvent(new Event('cartUpdated'));
 };

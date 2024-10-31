@@ -119,6 +119,11 @@ export const getKoiFishByIds = async (ids: string[]) => {
   return response.data;
 };
 
+export const getRelatedKoiFish = async (id: number) => {
+  const response = await api.get(`/api/KoiFish/related/${id}`);
+  return response.data;
+};
+
 export const createKoiFish = async (userId: number, data: KoiFishCreate) => {
   const response = await api.post(`/api/KoiFish/${userId}`, data);
   return response.data;

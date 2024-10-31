@@ -21,9 +21,6 @@ export default function FishCard({ id, name, image, price, size }: FishCardProps
     const currentCart = getCartItems();
     const newCart = [...currentCart, Number(id)];
     updateCart(newCart);
-
-    // Thông báo cho người dùng
-    toast.success("Added to cart");
   };
   return (
     <div className="bg-white rounded-lg overflow-hidden w-64 ">

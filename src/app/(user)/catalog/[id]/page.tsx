@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "react-toastify";
 import { postRating } from "@/lib/api/ratingApi";
 import { getCartItems, updateCart } from "@/lib/cartUtils";
+import RelatedKoiFish from "./components/RelatedKoifish";
 
 export default function KoifishDetails({ params }: { params: { id: string } }) {
   const user = localStorage.getItem("user");
@@ -150,7 +151,7 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
                 </tr>
                 <tr className="border-b">
                   <td className="py-2 font-semibold">Breeder:</td>
-                  <td className="py-2">{koiFish.breeder}</td>
+                  <td className="py-2">{koiFish.breed.breedName}</td>
                 </tr>
                 <tr>
                   <td className="py-2 font-semibold">Gender:</td>
@@ -161,6 +162,10 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
+
+      {/* Related Koi Fishes */}
+      <RelatedKoiFish koiFishId={Number(params.id)} />
+      
       {/* Rating Section */}
       <div className="mt-12 mb-12">
         <h2 className="text-2xl font-semibold mb-6">Rate this Koi Fish</h2>
@@ -187,6 +192,7 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
           </Button>
         </form>
       </div>
+
       {/* Comments Section */}
       <hr className="my-6 border-t border-gray-300" />
       <div className="mt-12 mb-12">
