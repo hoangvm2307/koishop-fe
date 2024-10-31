@@ -11,11 +11,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import ImageUploader from "../components/ImageUploader";
+import { getKoiFishList, KoiFish } from "@/lib/api/koifishApi";
+import KoiFishTable from "./components/KoifishTable";
+import RecentOrdersTable from "./components/RecentOrdersTable";
 
 export default function ProfilePage() {
+  const user = localStorage.getItem("user");
+  const userData = user ? JSON.parse(user) : null;
+  const [activeTab, setActiveTab] = useState<"orders" | "koiFishes">("orders");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
+  const [koiFishes, setKoiFishes] = useState<KoiFish[]>([]);
+
   const getPaymentLinkMutation = useMutation({
     mutationFn: getPaymentLink,
     onSuccess: async (data) => {
@@ -69,25 +77,44 @@ export default function ProfilePage() {
     };
 
     fetchOrders();
-  }, []);
+  }, [activeTab]);
+  useEffect(() => {
+    const fetchKoiFishes = async () => {
+      try {
+        const result = await getKoiFishList({ userId: userData.id });
+        setKoiFishes(result.items);
+      } catch (error) {
+        console.error("Error fetching koi fishes:", error);
+      }
+    };
 
+    if (activeTab === "koiFishes") {
+      fetchKoiFishes();
+    }
+  }, [activeTab]);
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      
-
       <div className="flex flex-col lg:flex-row gap-8">
         <Card className="lg:w-1/4 h-fit shadow-sm">
           <CardHeader className="bg-gray-50">
             <CardTitle className="text-xl">My Account</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
-            <Button variant="ghost" className="w-full justify-start hover:bg-gray-100 transition-colors">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-100 transition-colors"
+              onClick={() => setActiveTab("orders")}
+            >
               <span className="mr-2">📦</span> My Orders
             </Button>
             <Button variant="ghost" className="w-full justify-start hover:bg-gray-100 transition-colors">
               <span className="mr-2">⭐</span> My Reviews
             </Button>
-            <Button variant="ghost" className="w-full justify-start hover:bg-gray-100 transition-colors">
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-gray-100 transition-colors"
+              onClick={() => setActiveTab("koiFishes")}
+            >
               <span className="mr-2">🐟</span> My Koi Fishes
             </Button>
             <Button
@@ -99,46 +126,17 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
         <div className="lg:w-3/4">
-          <Card className="shadow-sm  ">
+          <Card className="shadow-sm">
             <CardHeader className="bg-gray-50">
-              <CardTitle className="text-xl">Recent Orders</CardTitle>
+              <CardTitle className="text-xl">
+                {activeTab === "orders" ? "Recent Orders" : "My Koi Fishes"}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              {loading ? (
-                <div className="flex justify-center items-center h-64">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                </div>
+              {activeTab === "orders" ? (
+                <RecentOrdersTable orders={orders} loading={loading} />
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px]">ID</TableHead>
-                      <TableHead>Order Date</TableHead>
-                      <TableHead>Total Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>User Name</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {orders.map((order) => (
-                      <TableRow key={order.id} className="hover:bg-gray-50">
-                        <TableCell className="font-medium">{order.id}</TableCell>
-                        <TableCell>{new Date(order.orderDate).toLocaleDateString("vi-VN")}</TableCell>
-                        <TableCell>{order.totalAmount.toLocaleString("vi-VN")} ₫</TableCell>
-                        <TableCell>
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                              order.status
-                            )}`}
-                          >
-                            {order.status}
-                          </span>
-                        </TableCell>
-                        <TableCell>{order.userName}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <KoiFishTable koiFishes={koiFishes} loading={loading} />
               )}
             </CardContent>
           </Card>
@@ -147,15 +145,4 @@ export default function ProfilePage() {
     </div>
   );
 }
-function getStatusColor(status: string) {
-  switch (status.toLowerCase()) {
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "completed":
-      return "bg-green-100 text-green-800";
-    case "cancelled":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-}
+ 
