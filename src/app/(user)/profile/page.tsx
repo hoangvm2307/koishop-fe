@@ -4,25 +4,29 @@ import { useState, useEffect } from "react";
 import { getUserOrders, Order, paymentSuccess } from "@/lib/api/orderApi";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getPaymentLink } from "@/lib/api/vnpayApi";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import ImageUploader from "../components/ImageUploader";
 import { getKoiFishList, KoiFish } from "@/lib/api/koifishApi";
 import KoiFishTable from "./components/KoifishTable";
 import RecentOrdersTable from "./components/RecentOrdersTable";
+import Cookies from "js-cookie";
+import { Consignment, getConsignmentByUserId } from "@/lib/api/consignmentApi";
+import ConsignmentTable from "./components/ConsignmentTable";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const user = localStorage.getItem("user");
   const userData = user ? JSON.parse(user) : null;
-  const [activeTab, setActiveTab] = useState<"orders" | "koiFishes">("orders");
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [activeTab, setActiveTab] = useState<"orders" | "koiFishes" | "consignments">("orders");
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
+
   const [koiFishes, setKoiFishes] = useState<KoiFish[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [consignments, setConsignments] = useState<Consignment[]>([]);
 
   const getPaymentLinkMutation = useMutation({
     mutationFn: getPaymentLink,
@@ -67,7 +71,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const result = await getUserOrders({ PageNumber: 1, PageSize: 10, UserId: 1 });
+        const result = await getUserOrders({ PageNumber: 1, PageSize: 10, UserId: userData.id });
         setOrders(result.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -78,6 +82,7 @@ export default function ProfilePage() {
 
     fetchOrders();
   }, [activeTab]);
+
   useEffect(() => {
     const fetchKoiFishes = async () => {
       try {
@@ -92,6 +97,42 @@ export default function ProfilePage() {
       fetchKoiFishes();
     }
   }, [activeTab]);
+
+  useEffect(() => {
+    const fetchConsignments = async () => {
+      try {
+        const result = await getConsignmentByUserId(userData.id);
+        setConsignments(result);
+      } catch (error) {
+        console.error("Error fetching consignments:", error);
+      }
+    };
+
+    if (activeTab === "consignments") {
+      fetchConsignments();
+    }
+  }, [activeTab]);
+
+  const refreshConsignments = async () => {
+    try {
+      const result = await getConsignmentByUserId(userData.id);
+      setConsignments(result);
+    } catch (error) {
+      console.error("Error refreshing consignments:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    // Xóa user từ localStorage
+    localStorage.removeItem("user");
+
+    // Xóa tất cả cookies liên quan
+    Cookies.remove("token");
+    window.dispatchEvent(new Event("userLogout"));
+    // Chuyển hướng về trang home
+    router.push("/");
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col lg:flex-row gap-8">
@@ -119,7 +160,15 @@ export default function ProfilePage() {
             </Button>
             <Button
               variant="ghost"
+              className="w-full justify-start hover:bg-gray-100 transition-colors"
+              onClick={() => setActiveTab("consignments")}
+            >
+              <span className="mr-2">📋</span> My Consignments
+            </Button>
+            <Button
+              variant="ghost"
               className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+              onClick={handleLogout}
             >
               <span className="mr-2">🚪</span> Logout
             </Button>
@@ -135,8 +184,10 @@ export default function ProfilePage() {
             <CardContent className="p-0">
               {activeTab === "orders" ? (
                 <RecentOrdersTable orders={orders} loading={loading} />
-              ) : (
+              ) : activeTab === "koiFishes" ? (
                 <KoiFishTable koiFishes={koiFishes} loading={loading} />
+              ) : (
+                <ConsignmentTable consignments={consignments} loading={loading} onUpdate={refreshConsignments} />
               )}
             </CardContent>
           </Card>
@@ -145,4 +196,3 @@ export default function ProfilePage() {
     </div>
   );
 }
- 

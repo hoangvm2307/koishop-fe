@@ -22,6 +22,11 @@ export default function MainLayout({
       const userData = JSON.parse(user);
       setUsername(userData.userName);
     }
+    const handleLogout = () => {
+      setUsername(null);
+    };
+
+    window.addEventListener("userLogout", handleLogout);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
@@ -38,6 +43,7 @@ export default function MainLayout({
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("cartUpdated", updateCartCount);
+      window.removeEventListener("userLogout", handleLogout);
     };
   }, []);
 
@@ -96,7 +102,7 @@ export default function MainLayout({
                 </Link>
               ) : (
                 <Link href="/login">
-                  <Button variant="default" size="icon">
+                  <Button variant="ghost" size="icon">
                     <User className="h-4 w-4" />
                   </Button>
                 </Link>

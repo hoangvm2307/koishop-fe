@@ -128,3 +128,9 @@ export const createKoiFish = async (userId: number, data: KoiFishCreate) => {
   const response = await api.post(`/api/KoiFish/${userId}`, data);
   return response.data;
 };
+
+export const updateKoiFish = async (id: string, data: KoiFish) => {
+  const response = await api.put(`/api/KoiFish/${id}`, data);
+  return response.data;
+};
+

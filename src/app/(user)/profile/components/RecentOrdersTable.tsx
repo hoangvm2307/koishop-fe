@@ -32,7 +32,11 @@ export default function RecentOrdersTable({ orders, loading }: RecentOrdersProps
                 <TableCell>{new Date(order.orderDate).toLocaleDateString("vi-VN")}</TableCell>
                 <TableCell>{order.totalAmount.toLocaleString("vi-VN")} ₫</TableCell>
                 <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                      order.status
+                    )}`}
+                  >
                     {order.status}
                   </span>
                 </TableCell>
@@ -45,15 +49,20 @@ export default function RecentOrdersTable({ orders, loading }: RecentOrdersProps
     </>
   );
 }
-
 function getStatusColor(status: string) {
   switch (status.toLowerCase()) {
     case "pending":
       return "bg-yellow-100 text-yellow-800";
-    case "completed":
+    case "processing":
+      return "bg-blue-100 text-blue-800";
+    case "delivering":
+      return "bg-indigo-100 text-indigo-800";
+    case "delivered":
       return "bg-green-100 text-green-800";
     case "cancelled":
       return "bg-red-100 text-red-800";
+    case "holding":
+      return "bg-orange-100 text-orange-800";
     default:
       return "bg-gray-100 text-gray-800";
   }
