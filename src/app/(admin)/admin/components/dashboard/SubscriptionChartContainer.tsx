@@ -1,28 +1,46 @@
 'use client';
-import React, { useState } from 'react';
-import SubscriptionChart from './SubscriptionChart';
-import styles from './SubscriptionChartContainer.module.css';
+import React from 'react';
+import SubscriptionChart from './SubscriptionChart'; // Import the chart component
 
-const SubscriptionChartContainer: React.FC = () => {
-  const [timeRange, setTimeRange] = useState('Last 6 months');
+interface RevenueData {
+  revenueFromKoiShop: number;
+  revenueFromCommission: number;
+  totalCommissionOrders: number;
+  completedOrders: number;
+}
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>SUBSCRIPTION BY TYPE</h2>
-        <select 
-          value={timeRange} 
-          onChange={(e) => setTimeRange(e.target.value)}
-          className={styles.select}
-        >
-          <option value="Last 6 months">Last 6 months</option>
-          <option value="Last 12 months">Last 12 months</option>
-          <option value="This year">This year</option>
-        </select>
-      </div>
-      <SubscriptionChart />
-    </div>
-  );
+interface SubscriptionChartContainerProps {
+  data: Record<string, RevenueData>; // Expecting an object with month keys
+  chartType: 'revenueFromKoiShop' | 'revenueFromCommission' | 'totalCommissionOrders' | 'completedOrders';
+}
+
+const SubscriptionChartContainer: React.FC<SubscriptionChartContainerProps> = ({ data, chartType }) => {
+  // Prepare the datasets based on the provided data
+  const months = Object.keys(data);
+  const chartData = {
+    labels: months,
+    datasets: [
+      {
+        label: chartType === 'revenueFromKoiShop' ? 'Revenue from Koi Shop' :
+               chartType === 'revenueFromCommission' ? 'Revenue from Commission' :
+               chartType === 'totalCommissionOrders' ? 'Total Commission Orders' :
+               'Completed Orders',
+        data: months.map(month => data[month][chartType]),
+        backgroundColor: chartType === 'revenueFromKoiShop' ? 'rgb(173, 216, 230)' :
+                         chartType === 'revenueFromCommission' ? 'rgb(255, 206, 86)' :
+                         chartType === 'totalCommissionOrders' ? 'rgb(75, 192, 192)' :
+                         'rgb(255, 99, 132)', // Different color for completed orders
+      },
+    ],
+  };
+
+  // Set the title based on the chart type
+  const title = chartType === 'revenueFromKoiShop' ? 'Revenue from Koi Shop' :
+                chartType === 'revenueFromCommission' ? 'Revenue from Commission' :
+                chartType === 'totalCommissionOrders' ? 'Total Commission Orders' :
+                'Completed Orders';
+
+  return <SubscriptionChart data={chartData} title={title} />; // Pass the prepared data and title to the chart
 };
 
 export default SubscriptionChartContainer;

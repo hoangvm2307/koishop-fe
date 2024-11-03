@@ -20,18 +20,24 @@ ChartJS.register(
   Legend
 );
 
-const SubscriptionChart: React.FC = () => {
+interface SubscriptionChartProps {
+  data: any;
+  title: string; // Add title prop
+}
+
+const SubscriptionChart: React.FC<SubscriptionChartProps> = ({ data, title }) => {
   const options = {
     plugins: {
       title: {
         display: true,
-        text: 'SUBSCRIPTION BY TYPE',
+        text: title, // Use the title prop
       },
       legend: {
         position: 'bottom' as const,
       },
     },
     responsive: true,
+    maintainAspectRatio: false, // Allow the chart to fill the container
     scales: {
       x: {
         grid: {
@@ -40,7 +46,7 @@ const SubscriptionChart: React.FC = () => {
       },
       y: {
         beginAtZero: true,
-        max: 50,
+        max: Math.max(...data.datasets.map((d: any) => Math.max(...d.data))) + 10, // Dynamic max value
         ticks: {
           stepSize: 10,
         },
@@ -48,31 +54,8 @@ const SubscriptionChart: React.FC = () => {
     },
   };
 
-  const labels = ['Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: '1 Month',
-        data: [30, 37, 39, 43, 44, 45],
-        backgroundColor: 'rgb(173, 216, 230)',
-      },
-      {
-        label: '3 Months',
-        data: [15, 17, 18, 19, 19, 20],
-        backgroundColor: 'rgb(255, 206, 86)',
-      },
-      {
-        label: '12 Months',
-        data: [12, 12, 13, 13, 13, 13],
-        backgroundColor: 'rgb(75, 192, 192)',
-      },
-    ],
-  };
-
   return (
-    <div style={{ height: '400px', width: '100%' }}>
+    <div style={{ height: '100%', width: '100%' }}> {/* Full width and height */}
       <Bar options={options} data={data} />
     </div>
   );
