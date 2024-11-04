@@ -3,6 +3,7 @@ import React from "react";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // Import necessary components
 import SubscriptionChartContainer from "../components/dashboard/SubscriptionChartContainer"; // Import SubscriptionChartContainer
+import { useGetOrderRevenue } from "@/hooks/order.hook";
 const sampleData = {
   "1": { "revenueFromKoiShop": 100, "revenueFromCommission": 50, "totalCommissionOrders": 20, "completedOrders": 15 },
   "2": { "revenueFromKoiShop": 150, "revenueFromCommission": 70, "totalCommissionOrders": 25, "completedOrders": 20 },
@@ -20,6 +21,8 @@ const sampleData = {
 };
 
 function DashboardPage() {
+  const { data } = useGetOrderRevenue(2024);
+
   return (
     <ContentLayout title="Dashboard">
       <Tabs defaultValue="revenueFromKoiShop" className="w-auto">
@@ -31,22 +34,22 @@ function DashboardPage() {
         </TabsList>
         <TabsContent value="revenueFromKoiShop" className="flex items-center justify-center h-full">
           <div style={{ height: '50vh', width: '70%' }}> {/* Full height and width for the chart */}
-            <SubscriptionChartContainer data={sampleData} chartType="revenueFromKoiShop" />
+            <SubscriptionChartContainer data={data} chartType="revenueFromKoiShop" />
           </div>
         </TabsContent>
         <TabsContent value="revenueFromCommission" className="flex items-center justify-center h-full">
           <div style={{ height: '50vh', width: '70%' }}>
-            <SubscriptionChartContainer data={sampleData} chartType="revenueFromCommission" />
+            <SubscriptionChartContainer data={data} chartType="revenueFromCommission" />
           </div>
         </TabsContent>
         <TabsContent value="totalCommissionOrders" className="flex items-center justify-center h-full">
           <div style={{ height: '50vh', width: '70%' }}>
-            <SubscriptionChartContainer data={sampleData} chartType="totalCommissionOrders" />
+            <SubscriptionChartContainer data={data} chartType="totalCommissionOrders" />
           </div>
         </TabsContent>
         <TabsContent value="completedOrders" className="flex items-center justify-center h-full">
           <div style={{ height: '50vh', width: '70%' }}>
-            <SubscriptionChartContainer data={sampleData} chartType="completedOrders" />
+            <SubscriptionChartContainer data={data} chartType="completedOrders" />
           </div>
         </TabsContent>
       </Tabs>
