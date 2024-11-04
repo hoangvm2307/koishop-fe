@@ -1,5 +1,4 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import KoiFishList from "./components/KoiFishList";
 import Hero from "./components/Hero";
 import CustomerBenefits from "./components/CustomerBenefits";

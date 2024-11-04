@@ -43,3 +43,8 @@ export const paymentSuccess = async (orderId: number) => {
   const response = await api.put(`/api/Order/order/${orderId}/payment-success`);
   return response.data;
 };
+
+export const getOrderRevuenue = async (year: number) => {
+  const response = await api.get(`/api/Order/revenue/${year}`);
+  return response.data;
+};
