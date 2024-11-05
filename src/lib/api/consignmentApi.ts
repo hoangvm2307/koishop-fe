@@ -1,3 +1,4 @@
+import { ConsignmentUpdateDto } from "@/models/consignment";
 import api from "../axios";
 
 export interface ConsignmentItem {
@@ -13,6 +14,7 @@ export interface Consignment {
   price: number;
   status: string;
   userID: number;
+  userId: number;
   consignmentItems: ConsignmentItem[];
 }
 export interface ConsignmentCreate {
@@ -21,6 +23,7 @@ export interface ConsignmentCreate {
   consignmentType: string;
   status: string;
   userID: number;
+  userId: number;
   consignmentItems: ConsignmentItem[];
 }
 
@@ -44,3 +47,12 @@ export const cancelConsignment = async (id: number) => {
   return response.data;
 };
 
+export const getConsignments = async () => {
+  const response = await api.get('/api/Consignment');
+  return response.data;
+};
+
+export const updateConsignmentStatusApi = async (data: ConsignmentUpdateDto) => {
+  const response = await api.patch(`/api/Consignment/consignment/status`, data);
+  return response.data;
+};
