@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { OrderUpdateDto } from "@/models/order";
 
 interface OrderItemCreationDto {
   koiFishId: number;
@@ -48,3 +49,10 @@ export const getOrderRevuenue = async (year: number) => {
   const response = await api.get(`/api/Order/revenue/${year}`);
   return response.data;
 };
+
+export const updateOrderStatusApi = async (data: OrderUpdateDto) => {
+  const response = await api.patch(`/api/Order/order/status`, data);
+  return response.data;
+};
+
+
