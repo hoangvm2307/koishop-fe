@@ -13,5 +13,9 @@ export interface Order {
     status: string;
     userId: number;
     userName: string;
-    // orderItems: OrderItem[];
+}
+
+export type OrderUpdateDto = {
+    id: number;
+    status: string;
 }

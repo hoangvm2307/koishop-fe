@@ -47,7 +47,7 @@ export function getMenuList(pathname: string): Group[] {
           icon: ShoppingCart,
         },
         {
-          href: "/admin/consignment",
+          href: "/admin/consignments",
           label: "Consignments",
           icon: Package,
         },
@@ -57,7 +57,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Accounts",
       menus: [
         {
-          href: "/admin/account",
+          href: "/admin/users",
           label: "Users",
           icon: Users,
         },

@@ -17,33 +17,27 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    // Set filter value for both 'name' and 'userName' columns
+    table.getColumn("name")?.setFilterValue(value);
+    table.getColumn("userName")?.setFilterValue(value);
+  };
+
+  const nameFilterValue = (table.getColumn("name")?.getFilterValue() as string) ?? "";
+  const userNameFilterValue = (table.getColumn("userName")?.getFilterValue() as string) ?? "";
+
+  const combinedFilterValue = nameFilterValue || userNameFilterValue;
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Search Clinic ..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          placeholder="Search"
+          value={combinedFilterValue} // Use the combined filter value
+          onChange={handleSearchChange} // Use the new handler
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {/* {table.getColumn("name") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("name")}
-            title="Thương hiệu"
-            options={[
-              {
-                value: "Dell",
-                label: "Dell",
-              },
-              {
-                value: "brand",
-                label: "Brand",
-              },
-            ]}
-          />
-        )} */}
         {isFiltered && (
           <Button
             variant="ghost"

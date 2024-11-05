@@ -25,3 +25,8 @@ export const registerUser = async (data: RegisterFormData) => {
   const response = await api.post("/api/account/register", data);
   return response.data;
 };
+
+export const getUsers = async () => {
+  const response = await api.get("/api/Account");
+  return response.data;
+};
