@@ -21,10 +21,11 @@ const sampleData = {
 };
 
 function DashboardPage() {
-  const { data } = useGetOrderRevenue(2024);
+  const { data, loading } = useGetOrderRevenue(2024);
 
   return (
-    <ContentLayout title="Dashboard">
+    !loading && (
+      <ContentLayout title="Dashboard">
       <Tabs defaultValue="revenueFromKoiShop" className="w-auto">
         <TabsList className="flex space-x-2">
           <TabsTrigger value="revenueFromKoiShop" className="text-sm">Revenue from Koi Shop</TabsTrigger>
@@ -54,6 +55,7 @@ function DashboardPage() {
         </TabsContent>
       </Tabs>
     </ContentLayout>
+    )
   );
 }
 
