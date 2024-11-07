@@ -1,4 +1,4 @@
-import { LayoutGrid, LucideIcon, Package, ShoppingCart, Users } from "lucide-react";
+import { Fish, LayoutGrid, LucideIcon, Package, ShoppingCart, Users } from "lucide-react";
 
 type Submenu = {
   href: string;
@@ -44,6 +44,11 @@ export function getMenuList(pathname: string, roles: string[]): Group[] {
           href: "/admin/consignments",
           label: "Consignments",
           icon: Package,
+        },
+        {
+          href: "/admin/koifishes",
+          label: "Koi Fish",
+          icon: Fish,
         },
       ],
     },
