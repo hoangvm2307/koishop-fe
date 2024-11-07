@@ -1,11 +1,12 @@
 'use client';
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement, // Add PointElement
   Title,
   Tooltip,
   Legend,
@@ -14,7 +15,8 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
+  PointElement, // Register PointElement
   Title,
   Tooltip,
   Legend
@@ -22,7 +24,7 @@ ChartJS.register(
 
 interface SubscriptionChartProps {
   data: any;
-  title: string; // Add title prop
+  title: string;
 }
 
 const SubscriptionChart: React.FC<SubscriptionChartProps> = ({ data, title }) => {
@@ -30,14 +32,14 @@ const SubscriptionChart: React.FC<SubscriptionChartProps> = ({ data, title }) =>
     plugins: {
       title: {
         display: true,
-        text: title, // Use the title prop
+        text: title,
       },
       legend: {
         position: 'bottom' as const,
       },
     },
     responsive: true,
-    maintainAspectRatio: false, // Allow the chart to fill the container
+    maintainAspectRatio: false,
     scales: {
       x: {
         grid: {
@@ -46,7 +48,7 @@ const SubscriptionChart: React.FC<SubscriptionChartProps> = ({ data, title }) =>
       },
       y: {
         beginAtZero: true,
-        max: Math.max(...data.datasets.map((d: any) => Math.max(...d.data))) + 10, // Dynamic max value
+        max: Math.max(...data.datasets.map((d: any) => Math.max(...d.data))) + 10,
         ticks: {
           stepSize: 10,
         },
@@ -55,8 +57,8 @@ const SubscriptionChart: React.FC<SubscriptionChartProps> = ({ data, title }) =>
   };
 
   return (
-    <div style={{ height: '100%', width: '100%' }}> {/* Full width and height */}
-      <Bar options={options} data={data} />
+    <div style={{ height: '100%', width: '100%' }}>
+      <Line options={options} data={data} />
     </div>
   );
 };
