@@ -1,10 +1,4 @@
-import {
-  LayoutGrid,
-  LucideIcon,
-  Package,
-  ShoppingCart,
-  Users
-} from "lucide-react";
+import { LayoutGrid, LucideIcon, Package, ShoppingCart, Users } from "lucide-react";
 
 type Submenu = {
   href: string;
@@ -25,8 +19,8 @@ type Group = {
   menus: Menu[];
 };
 
-export function getMenuList(pathname: string): Group[] {
-  return [
+export function getMenuList(pathname: string, roles: string[]): Group[] {
+  const menuList: Group[] = [
     {
       groupLabel: "",
       menus: [
@@ -61,12 +55,19 @@ export function getMenuList(pathname: string): Group[] {
           label: "Users",
           icon: Users,
         },
-        // {
-        //   href: "/account",
-        //   label: "Account",
-        //   icon: Settings,
-        // },
+        {
+          href: "/admin/staffs",
+          label: "Staffs",
+          icon: Users,
+        },
       ],
     },
   ];
+
+  // Loại bỏ nhóm "Accounts" nếu role là "Staff"
+  if (roles.includes("Staff")) {
+    return menuList.filter((group) => group.groupLabel !== "Accounts");
+  }
+
+  return menuList;
 }

@@ -10,25 +10,46 @@ import { getMenuList } from "@/lib/menu-list";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CollapseMenuButton } from "@/components/admin-panel/collapse-menu-button";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import Cookies from "js-cookie";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { DecodedToken } from "@/lib/axios";
+import { useState } from "react";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 interface MenuProps {
   isOpen: boolean | undefined;
 }
 
 export function Menu({ isOpen }: MenuProps) {
+  const [userRole, setUserRole] = useState<string[]>([]);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode<DecodedToken>(token);
+        const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        setUserRole([role]);
+      } catch (error) {
+        console.error("Lỗi khi decode token:", error);
+      }
+    }
+  }, []);
+
   const pathname = usePathname();
-  const menuList = getMenuList(pathname);
+  const menuList = getMenuList(pathname, userRole);
   const router = useRouter();
 
   const handleSignOut = () => {
-    localStorage.removeItem("adminToken");
-    router.push("/login");
+    // Xóa user từ localStorage
+    localStorage.removeItem("user");
+
+    // Xóa tất cả cookies liên quan
+    Cookies.remove("token");
+    window.dispatchEvent(new Event("userLogout"));
+    // Chuyển hướng về trang home
+    router.push("/");
   };
 
   return (
@@ -57,64 +78,53 @@ export function Menu({ isOpen }: MenuProps) {
             ) : (
               <p className="pb-2"></p>
             )}
-            {menus.map(
-              ({ href, label, icon: Icon, active, submenus }, index) =>
-                !submenus || submenus.length === 0 ? (
-                  <div className="w-full" key={index}>
-                    <TooltipProvider disableHoverableContent>
-                      <Tooltip delayDuration={100}>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant={
-                              (active === undefined &&
-                                pathname.startsWith(href)) ||
-                              active
-                                ? "secondary"
-                                : "ghost"
-                            }
-                            className="mb-1 h-10 w-full justify-start"
-                            asChild
-                          >
-                            <Link href={href}>
-                              <span
-                                className={cn(isOpen === false ? "" : "mr-4")}
-                              >
-                                <Icon size={18} />
-                              </span>
-                              <p
-                                className={cn(
-                                  "max-w-[200px] truncate",
-                                  isOpen === false
-                                    ? "-translate-x-96 opacity-0"
-                                    : "translate-x-0 opacity-100",
-                                )}
-                              >
-                                {label}
-                              </p>
-                            </Link>
-                          </Button>
-                        </TooltipTrigger>
-                        {isOpen === false && (
-                          <TooltipContent side="right">{label}</TooltipContent>
-                        )}
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                ) : (
-                  <div className="w-full" key={index}>
-                    <CollapseMenuButton
-                      icon={Icon}
-                      label={label}
-                      active={
-                        active === undefined
-                          ? pathname.startsWith(href)
-                          : active
-                      }
-                      submenus={submenus}
-                      isOpen={isOpen}
-                    />
-                  </div>
-                ),
+            {menus.map(({ href, label, icon: Icon, active, submenus }, index) =>
+              !submenus || submenus.length === 0 ? (
+                <div className="w-full" key={index}>
+                  <TooltipProvider disableHoverableContent>
+                    <Tooltip delayDuration={100}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={
+                            (active === undefined && pathname.startsWith(href)) || active
+                              ? "secondary"
+                              : "ghost"
+                          }
+                          className="mb-1 h-10 w-full justify-start"
+                          asChild
+                        >
+                          <Link href={href}>
+                            <span className={cn(isOpen === false ? "" : "mr-4")}>
+                              <Icon size={18} />
+                            </span>
+                            <p
+                              className={cn(
+                                "max-w-[200px] truncate",
+                                isOpen === false
+                                  ? "-translate-x-96 opacity-0"
+                                  : "translate-x-0 opacity-100"
+                              )}
+                            >
+                              {label}
+                            </p>
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      {isOpen === false && <TooltipContent side="right">{label}</TooltipContent>}
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : (
+                <div className="w-full" key={index}>
+                  <CollapseMenuButton
+                    icon={Icon}
+                    label={label}
+                    active={active === undefined ? pathname.startsWith(href) : active}
+                    submenus={submenus}
+                    isOpen={isOpen}
+                  />
+                </div>
+              )
             )}
           </li>
         ))}
@@ -133,16 +143,14 @@ export function Menu({ isOpen }: MenuProps) {
                   <p
                     className={cn(
                       "whitespace-nowrap",
-                      isOpen === false ? "hidden opacity-0" : "opacity-100",
+                      isOpen === false ? "hidden opacity-0" : "opacity-100"
                     )}
                   >
                     Sign out
                   </p>
                 </Button>
               </TooltipTrigger>
-              {isOpen === false && (
-                <TooltipContent side="right">Sign out</TooltipContent>
-              )}
+              {isOpen === false && <TooltipContent side="right">Sign out</TooltipContent>}
             </Tooltip>
           </TooltipProvider>
         </li>
