@@ -8,6 +8,7 @@ import { DataTable } from "../account/data-table";
 import { toast } from "@/hooks/use-toast";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
 import { useGetConsignments } from "@/hooks/consignment.hook";
+import { Consignment } from "@/models/consignment";
 
 function ConsignmentPage() {
   const { consignments, isLoading, error, fetchConsignments } = useGetConsignments(); 
@@ -34,7 +35,7 @@ function ConsignmentPage() {
         ) : error ? (
           <div className="text-red-500">{error}</div> // Show error message if fetching fails
         ) : (
-          <DataTable columns={columns} data={consignments} /> // Render the data table with consignments
+          <DataTable columns={columns} data={consignments as Consignment[]} /> // Render the data table with consignments
         )}
       </div>
     </ContentLayout>

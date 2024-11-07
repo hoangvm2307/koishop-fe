@@ -60,7 +60,7 @@ function DashboardPage() {
   return (
     <ContentLayout title="Dashboard">
       <div className="flex flex-row gap-4 bg-gray-50 p-4">
-        <div className="w-1/2 h-[36vh] p-4 bg-white shadow-md rounded-lg">
+        <div className="w-1/2 h-[360px] p-4 bg-white shadow-md rounded-lg">
           <SubscriptionChartContainer data={filteredData} chartType={chartType} />
         </div>
         <div className="w-1/2 h-1/2 grid grid-cols-2 grid-rows-2 gap-4">

@@ -5,6 +5,8 @@ export interface ConsignmentItem {
     orderId: number;
     koiFishId: number;
     koiFishName: string;
+    userId: number;
+    userID: number;
 }
 
 export interface Consignment {
@@ -15,6 +17,8 @@ export interface Consignment {
     price: number;
     status: string;
     userId: number;
+    userID: number;
+    consignmentItems: ConsignmentItem[];
 }
 
 export type ConsignmentUpdateDto = {

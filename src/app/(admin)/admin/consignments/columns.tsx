@@ -14,6 +14,7 @@ import moment from "moment";
 import { useToast } from "@/hooks/use-toast";
 import { useUpdateConsignmentStatus } from "@/hooks/consignment.hook"; 
 import { Consignment, ConsignmentUpdateDto } from "@/models/consignment";
+import ConsignmentItemsModal from "./ConsignmentItemsModal";
 
 // Define the consignment statuses with colors
 const consignmentStatuses = [
@@ -22,6 +23,7 @@ const consignmentStatuses = [
   { value: "REJECTED", label: "Rejected", color: "bg-red-500" },
   { value: "COMPLETED", label: "Completed", color: "bg-blue-500" },
 ];
+
 
 export const columns: ColumnDef<Consignment>[] = [
     {
@@ -93,28 +95,34 @@ export const columns: ColumnDef<Consignment>[] = [
             return (
                 <>
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() => navigator.clipboard.writeText(consignment.id.toString())}
-                            >
-                                Copy Consignment ID
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={() => navigator.clipboard.writeText(consignment.id.toString())}
+                        >
+                            Copy Consignment ID
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={() => setIsModalOpen(true)} // Open the consignment items modal
+                        >
+                            Consignment Items 
+                        </DropdownMenuItem>
+                        {consignmentStatuses.map((status) => (
+                            <DropdownMenuItem key={status.value} onClick={() => handleUpdateStatus(status.value)}>
+                                <div className={`flex items-center ${status.color} text-white rounded px-2 w-full`}>
+                                    {status.label}
+                                </div>
                             </DropdownMenuItem>
-                            {consignmentStatuses.map((status) => (
-                                <DropdownMenuItem key={status.value} onClick={() => handleUpdateStatus(status.value)}>
-                                    <div className={`flex items-center ${status.color} text-white rounded px-2 w-full`}>
-                                        {status.label}
-                                    </div>
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                <ConsignmentItemsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} consignmentItems={consignment.consignmentItems} userId={consignment.userID} />
                 </>
             );
         },

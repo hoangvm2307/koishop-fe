@@ -10,7 +10,6 @@ import { useGetUserOrders } from "@/hooks/order.hook";
 
 function OrderPage() {
   const { orders, isLoading, error, fetchOrders } = useGetUserOrders();
-
   console.log("orders", orders);
 
   return (
