@@ -40,7 +40,7 @@ export default function KoiFishTable({ koiFishes, loading }: KoiFishTableProps) 
                 <TableRow key={fish.id}>
                   <TableCell>{fish.id}</TableCell>
                   <TableCell>{fish.name}</TableCell>
-                  <TableCell>{fish.breed.breedName}</TableCell>
+                  <TableCell>{fish.breed ? fish.breed.breedName : "Unknown"}</TableCell>
                   <TableCell>{fish.size} cm</TableCell>
                   <TableCell>{fish.price.toLocaleString("vi-VN")} ₫</TableCell>
                   <TableCell>

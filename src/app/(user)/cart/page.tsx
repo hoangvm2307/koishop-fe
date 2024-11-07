@@ -14,6 +14,10 @@ import { toast } from "react-toastify";
 import { createPaymentLink } from "@/lib/api/vnpayApi";
 import { getKoiFishByIds, KoiFish } from "@/lib/api/koifishApi";
 import { getCartItems, updateCart } from "@/lib/cartUtils";
+import { DecodedToken } from "@/lib/axios";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
+
 
 export default function CartPage() {
   // States for cart management and options
@@ -22,13 +26,27 @@ export default function CartPage() {
   const [isConsignment, setIsConsignment] = useState(false);
   const [consignmentDuration, setConsignmentDuration] = useState(1);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [userRole, setUserRole] = useState<string>("");
 
   const router = useRouter();
-
+ 
+ useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode<DecodedToken>(token);
+        const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        setUserRole(role);
+ 
+      } catch (error) {
+        console.error("Lỗi khi decode token:", error);
+      }
+    }
+  }, []);
+ 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
   const tax = 0;
-  const total = subtotal + tax;
 
   // Fetch cart items from localStorage
   const { data: koiFishData, isLoading } = useQuery({
@@ -267,7 +285,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between font-bold text-lg mt-4">
                   <span>TOTAL:</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
               </div>
 
