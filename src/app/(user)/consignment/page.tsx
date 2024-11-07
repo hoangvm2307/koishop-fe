@@ -15,6 +15,7 @@ import { uploadImage } from "@/lib/firebaseUtils";
 import { createKoiFish, KoiFish, KoiFishCreate } from "@/lib/api/koifishApi";
 import { createConsignment } from "@/lib/api/consignmentApi";
 import { ConsignmentCreate } from "@/lib/api/consignmentApi";
+import { useRouter } from "next/navigation";
 
 interface ConsignmentForm extends KoiFishCreate {
   consignmentType: string;
@@ -25,6 +26,7 @@ export default function ConsignmentPage() {
   const userData = user ? JSON.parse(user) : null;
   const [imagePreview, setImagePreview] = useState<string>("");
   const form = useForm<ConsignmentForm>();
+  const router = useRouter(); 
 
   const onSubmit = async (data: ConsignmentForm) => {
     try {
@@ -42,7 +44,7 @@ export default function ConsignmentPage() {
         endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 ngày từ hiện tại
         consignmentType: "ONLINE", // hoặc giá trị phù hợp với yêu cầu của bạn
         status: "PENDING",
-        userID: userData.id,
+        userId: userData.id,
         consignmentItems: [
           {
             koiFishId: koiFishResponse.id, // ID của Koi fish vừa tạo
@@ -55,6 +57,7 @@ export default function ConsignmentPage() {
 
       if (consignmentResponse) {
         toast.success("Koi fish and consignment created successfully!");
+        router.push("/profile");
       } else {
         toast.error("Failed to create consignment");
       }
@@ -125,6 +128,16 @@ export default function ConsignmentPage() {
                             <SelectItem value="Japan">Japan</SelectItem>
                             <SelectItem value="Indonesia">Indonesia</SelectItem>
                             <SelectItem value="Thailand">Thailand</SelectItem>
+                            <SelectItem value="China">China</SelectItem>
+                            <SelectItem value="Vietnam">Vietnam</SelectItem>
+                            <SelectItem value="Malaysia">Malaysia</SelectItem>
+                            <SelectItem value="Singapore">Singapore</SelectItem>
+                            <SelectItem value="Israel">Israel</SelectItem>
+                            <SelectItem value="Taiwan">Taiwan</SelectItem>
+                            <SelectItem value="SouthKorea">South Korea</SelectItem>
+                            <SelectItem value="USA">USA</SelectItem>
+                            <SelectItem value="UK">UK</SelectItem>
+                            <SelectItem value="Netherlands">Netherlands</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -187,12 +200,32 @@ export default function ConsignmentPage() {
                   <FormField
                     control={form.control}
                     name="age"
-                    rules={{ required: "Age is required", min: 0 }}
+                    rules={{
+                      required: "Age is required",
+                      min: {
+                        value: 0,
+                        message: "Age cannot be negative",
+                      },
+                      validate: (value) => {
+                        if (value < 0) return "Age cannot be negative";
+                        if (!Number.isInteger(value)) return "Age must be a whole number";
+                        return true;
+                      },
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Age (years)</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input
+                            type="number"
+                            min="0"
+                            step="1"
+                            {...field}
+                            onChange={(e) => {
+                              const value = Math.max(0, parseInt(e.target.value) || 0);
+                              field.onChange(value);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -231,12 +264,32 @@ export default function ConsignmentPage() {
                   <FormField
                     control={form.control}
                     name="dailyFoodAmount"
-                    rules={{ required: "Daily food amount is required", min: 0 }}
+                    rules={{
+                      required: "Daily food amount is required",
+                      min: {
+                        value: 0,
+                        message: "Daily food amount cannot be negative",
+                      },
+                      validate: (value) => {
+                        if (value < 0) return "Daily food amount cannot be negative";
+                        if (!Number.isInteger(value)) return "Daily food amount must be a whole number";
+                        return true;
+                      },
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Daily Food Amount (grams)</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input
+                            type="number"
+                            min="0"
+                            step="1"
+                            {...field}
+                            onChange={(e) => {
+                              const value = Math.max(0, parseInt(e.target.value) || 0);
+                              field.onChange(value);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -275,12 +328,32 @@ export default function ConsignmentPage() {
                   <FormField
                     control={form.control}
                     name="price"
-                    rules={{ required: "Price is required", min: 0 }}
+                    rules={{
+                      required: "Price is required",
+                      min: {
+                        value: 0,
+                        message: "Price cannot be negative",
+                      },
+                      validate: (value) => {
+                        if (value < 0) return "Price cannot be negative";
+                        if (!Number(value)) return "Price must be a number";
+                        return true;
+                      },
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Price ($)</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            {...field}
+                            onChange={(e) => {
+                              const value = Math.max(0, parseFloat(e.target.value) || 0);
+                              field.onChange(value);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -290,12 +363,32 @@ export default function ConsignmentPage() {
                   <FormField
                     control={form.control}
                     name="listPrice"
-                    rules={{ required: "List price is required", min: 0 }}
+                    rules={{
+                      required: "List price is required",
+                      min: {
+                        value: 0,
+                        message: "List price cannot be negative",
+                      },
+                      validate: (value) => {
+                        if (value < 0) return "List price cannot be negative";
+                        if (!Number(value)) return "List price must be a number";
+                        return true;
+                      },
+                    }}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>List Price ($)</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            {...field}
+                            onChange={(e) => {
+                              const value = Math.max(0, parseFloat(e.target.value) || 0);
+                              field.onChange(value);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

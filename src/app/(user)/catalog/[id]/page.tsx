@@ -3,14 +3,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getKoiFishById, KoiFish } from "@/lib/api/koifishApi";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Truck, Calendar, Heart, Star } from "lucide-react";
+import { ShoppingCart, Truck, Calendar, Heart, Star, CheckIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "react-toastify";
 import { postRating } from "@/lib/api/ratingApi";
-import { getCartItems, updateCart } from "@/lib/cartUtils";
+import { getCartItems, updateCart, isInCart } from "@/lib/cartUtils";
 import RelatedKoiFish from "./components/RelatedKoifish";
 
 export default function KoifishDetails({ params }: { params: { id: string } }) {
@@ -27,6 +27,19 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
   const [rating, setRating] = useState(0);
   const queryClient = useQueryClient();
   const [comment, setComment] = useState("");
+  const [inCart, setInCart] = useState(false);
+
+  useEffect(() => {
+    setInCart(isInCart(Number(params.id)));
+
+    const handleCartUpdate = () => {
+      setInCart(isInCart(Number(params.id)));
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+  }, [params.id]);
+
   const ratingMutation = useMutation({
     mutationFn: postRating,
     onSuccess: () => {
@@ -40,13 +53,12 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
     },
   });
   const handleAddToCart = () => {
-    const currentCart = getCartItems();
-    //par
-    const newCart = [...currentCart, Number(params.id)];
-    updateCart(newCart);
-
-    // Thông báo cho người dùng
-    toast.success("Added to cart");
+    if (!inCart) {
+      const currentCart = getCartItems();
+      const newCart = [...currentCart, Number(params.id)];
+      updateCart(newCart);
+      toast.success("Added to cart successfully");
+    }
   };
   const handleRatingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,9 +101,23 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
           <p className="text-lg font-semibold mb-4">Exact Fish Pictured</p>
           <p className="text-2xl font-bold text-primary mb-6">${koiFish.price.toFixed(2)}</p>
           <p className="text-green-600 mb-4">In Stock</p>
-          <Button onClick={handleAddToCart} className="w-full mb-6 flex items-center justify-center">
-            <ShoppingCart className="mr-2" />
-            ADD TO CART
+          <Button
+            onClick={handleAddToCart}
+            disabled={inCart}
+            variant={inCart ? "secondary" : "default"}
+            className="w-full mb-6 flex items-center justify-center"
+          >
+            {inCart ? (
+              <>
+                <CheckIcon className="mr-2 h-4 w-4" />
+                ADDED
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="mr-2" />
+                ADD TO CART
+              </>
+            )}
           </Button>
           <div className="border-t border-b py-4 mb-6">
             <div className="flex items-center mb-2">
@@ -165,7 +191,7 @@ export default function KoifishDetails({ params }: { params: { id: string } }) {
 
       {/* Related Koi Fishes */}
       <RelatedKoiFish koiFishId={Number(params.id)} />
-      
+
       {/* Rating Section */}
       <div className="mt-12 mb-12">
         <h2 className="text-2xl font-semibold mb-6">Rate this Koi Fish</h2>

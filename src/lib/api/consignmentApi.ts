@@ -13,7 +13,7 @@ export interface Consignment {
   consignmentType: string;
   price: number;
   status: string;
-  userID: number;
+
   userId: number;
   consignmentItems: ConsignmentItem[];
 }
@@ -22,7 +22,7 @@ export interface ConsignmentCreate {
   endDate: string;
   consignmentType: string;
   status: string;
-  userID: number;
+
   userId: number;
   consignmentItems: ConsignmentItem[];
 }
@@ -48,7 +48,7 @@ export const cancelConsignment = async (id: number) => {
 };
 
 export const getConsignments = async () => {
-  const response = await api.get('/api/Consignment');
+  const response = await api.get("/api/Consignment");
   return response.data;
 };
 
