@@ -18,10 +18,10 @@ import ConsignmentItemsModal from "./ConsignmentItemsModal";
 
 // Define the consignment statuses with colors
 const consignmentStatuses = [
-  { value: "PENDING", label: "Pending", color: "bg-yellow-500" },
+//   { value: "PENDING", label: "Pending", color: "bg-yellow-500" },
   { value: "APPROVED", label: "Approved", color: "bg-green-500" },
   { value: "REJECTED", label: "Rejected", color: "bg-red-500" },
-  { value: "COMPLETED", label: "Completed", color: "bg-blue-500" },
+//   { value: "COMPLETED", label: "Completed", color: "bg-blue-500" },
 ];
 
 

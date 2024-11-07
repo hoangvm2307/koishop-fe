@@ -17,12 +17,12 @@ import OrderItemsModal from "./order-items-modal";
 
 // Define the order statuses with colors
 const orderStatuses = [
-  { value: "Pending", label: "Pending", color: "bg-yellow-500" },
-  { value: "Processing", label: "Processing", color: "bg-blue-500" },
-  { value: "Delivering", label: "Delivering", color: "bg-orange-500" },
-  { value: "Delivered", label: "Delivered", color: "bg-green-500" },
+  // { value: "Pending", label: "Pending", color: "bg-yellow-500" },
+  // { value: "Processing", label: "Processing", color: "bg-blue-500" },
+  // { value: "Delivering", label: "Delivering", color: "bg-orange-500" },
+  // { value: "Delivered", label: "Delivered", color: "bg-green-500" },
   { value: "Cancelled", label: "Cancelled", color: "bg-red-500" },
-  { value: "Holding", label: "Holding", color: "bg-gray-500" },
+  // { value: "Holding", label: "Holding", color: "bg-gray-500" },
 ];
 
 export const columns: ColumnDef<Order>[] = [

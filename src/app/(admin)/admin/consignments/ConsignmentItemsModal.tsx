@@ -86,7 +86,7 @@ const ConsignmentItemsModal: React.FC<ConsignmentItemsModalProps> = ({ isOpen, o
                 onClose={() => setIsFishCareModalOpen(false)} 
                 fishCares={selectedFishCare} 
                 consignmentItems={consignmentItems}
-                selectedIndex={selectedIndex} // Pass the selected index
+                selectedIndex={selectedIndex}
                 refetchFishCares={refetchFishCares} 
             />
         </div>
