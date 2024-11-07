@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
-import { ShoppingCart, Eye } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ShoppingCart, Eye, CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { getCartItems, updateCart } from "@/lib/cartUtils";
- 
+import { getCartItems, isInCart, updateCart } from "@/lib/cartUtils";
+
 interface FishCardProps {
   id: string;
   name: string;
@@ -17,14 +17,27 @@ interface FishCardProps {
 
 export default function FishCard({ id, name, image, price, size }: FishCardProps) {
   const router = useRouter();
+  const [inCart, setInCart] = useState(false);
+
+  useEffect(() => {
+    setInCart(isInCart(Number(id)));
+
+    const handleCartUpdate = () => {
+      setInCart(isInCart(Number(id)));
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => window.removeEventListener("cartUpdated", handleCartUpdate);
+  }, [id]);
+
   const handleAddToCart = () => {
     const currentCart = getCartItems();
     const newCart = [...currentCart, Number(id)];
     updateCart(newCart);
   };
+
   return (
     <div className="bg-white rounded-lg overflow-hidden w-64 ">
-     
       {/* Product Image */}
       <Link href={`/catalog/${id}`} className="relative block">
         <img src={image} alt={name} className="w-full h-64 object-contain cursor-pointer" />
@@ -40,10 +53,21 @@ export default function FishCard({ id, name, image, price, size }: FishCardProps
         <div className="flex justify-between items-center">
           <Button
             onClick={handleAddToCart}
-            className="flex items-center justify-center   text-white text-sm font-semibold py-2 px-4 rounded"
+            disabled={inCart}
+            variant={inCart ? "secondary" : "default"}
+            className="flex items-center justify-center text-sm font-semibold py-2 px-4 rounded"
           >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            ADD TO CART
+            {inCart ? (
+              <>
+                <CheckIcon className="mr-2 h-4 w-4" />
+                ADDED
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="mr-2" />
+                ADD TO CART
+              </>
+            )}
           </Button>
           <button className="flex items-center justify-center border border-gray-300 hover:border-primary text-gray-600 hover:text-primary text-sm font-semibold p-2 rounded">
             <Eye className="w-4 h-4" />
