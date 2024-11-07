@@ -11,8 +11,6 @@ import { useGetUserOrders } from "@/hooks/order.hook";
 function OrderPage() {
   const { orders, isLoading, error, fetchOrders } = useGetUserOrders();
 
-  console.log("orders", orders);
-
   return (
     <ContentLayout title="Orders">
       <div className="bg-shade-1-100% text-shade-2-100% space-y-4 rounded-[8px] p-4">

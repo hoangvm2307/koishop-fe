@@ -14,7 +14,6 @@ export default function RootLayout({
     const adminToken = localStorage.getItem("adminToken");
     if (adminToken !== "THIS_IS_ADMIN_TOKEN") {
       localStorage.removeItem("adminToken");
-      // router.push("/login");
     }
   }, [router]);
 

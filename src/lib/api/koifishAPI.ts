@@ -134,3 +134,7 @@ export const updateKoiFish = async (id: string, data: KoiFish) => {
   return response.data;
 };
 
+export const deleteKoiFish = async (id: string) => {
+  const response = await api.delete(`/api/KoiFish/${id}`);
+  return response.data;
+};
