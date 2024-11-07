@@ -2,7 +2,7 @@ import { Calendar, Heart, Truck } from "lucide-react";
 
 export default function CustomerBenefits() {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Overnight Shipping */}
       <div className="p-4 py-10 bg-[#F0F0F0] grid grid-cols-3 gap-4 items-center">
         <div className="flex justify-center items-center">
@@ -22,7 +22,7 @@ export default function CustomerBenefits() {
       <div className="p-4 py-10 bg-[#F0F0F0] grid grid-cols-3 gap-4 items-center">
         <div className="flex justify-center items-center">
           <Calendar size={"3rem"} strokeWidth={"1.5px"} className="text-[#8BB9BF]" />
-        </div>{" "}
+        </div>
         <div className="col-span-2">
           <h2 className="text-xl font-semibold text-primary">PICK YOUR DELIVERY DATE</h2>
           <ul className="list-disc ml-5">
@@ -36,7 +36,7 @@ export default function CustomerBenefits() {
       <div className="p-4 py-10 bg-[#F0F0F0] grid grid-cols-3 gap-4 items-center">
         <div className="flex justify-center items-center">
           <Heart size={"3rem"} strokeWidth={"1.5px"} className="text-[#8BB9BF]" />
-        </div>{" "}
+        </div>
         <div className="col-span-2">
           <h2 className="text-xl font-semibold text-primary">14-DAY WORRY-FREE GUARANTEE</h2>
           <p className="text-sm">

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { User, ShoppingCart } from "lucide-react";
+import { User, ShoppingCart, Menu } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Badge } from "../ui/badge";
 import { getCartItems } from "@/lib/cartUtils";
 import Footer from "./Footer";
+
 export default function MainLayout({
   children,
 }: Readonly<{
@@ -16,6 +17,8 @@ export default function MainLayout({
   const [username, setUsername] = useState<string | null>(null);
   const [cartItemCount, setCartItemCount] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -53,7 +56,7 @@ export default function MainLayout({
       <div
         className={`bg-primary transition-all duration-300 ${isScrolled ? "h-0 overflow-hidden" : ""}`}
       >
-        <div className="mx-auto px-8 py-2 flex justify-between items-center">
+        <div className="mx-auto px-4 sm:px-8 py-2 flex flex-col sm:flex-row justify-between items-center">
           <div className="text-white">
             <span className="mr-2 text-sm">800-351-6851</span>|
             <a href="#" className="text-sm ml-2 hover:underline transition duration-300">
@@ -64,16 +67,24 @@ export default function MainLayout({
       </div>
 
       <nav className="bg-white shadow-md sticky top-0 z-50">
-        <div className="mx-auto px-8">
-          <div className="flex justify-between items-center py-2">
-            <Link href="/" className="text-2xl font-bold italic">
-              <span className="text-red-600">KOI</span>
-              <span className="text-teal-900">GARDEN</span>
-            </Link>
+        <div className="mx-auto px-4 sm:px-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center py-2">
+            <div className="flex justify-between items-center w-full sm:w-auto">
+              <Link href="/" className="text-2xl font-bold italic">
+                <span className="text-red-600">KOI</span>
+                <span className="text-teal-900">GARDEN</span>
+              </Link>
+              <button
+                className="sm:hidden"
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            </div>
 
-            <div className="flex items-center gap-6">
+            <div className={`flex-col sm:flex-row gap-6 ${menuOpen ? 'flex' : 'hidden'} sm:flex w-full sm:w-auto items-center`}>
               {/* Menu items */}
-              <div className="flex gap-6">
+              <div className="flex flex-col sm:flex-row gap-6 items-center">
                 {[
                   "SHOP ALL",
                   "KOI FISH FOR SALE",
@@ -91,32 +102,33 @@ export default function MainLayout({
                   </Link>
                 ))}
               </div>
-            </div>
-            {/* User và Cart buttons */}
-            <div className="flex items-center gap-2">
-              {username ? (
-                <Link href="/profile">
-                  <Button variant="ghost" className="text-primary">
-                    {username}
+
+              {/* User và Cart buttons */}
+              <div className="flex items-center gap-2">
+                {username ? (
+                  <Link href="/profile">
+                    <Button variant="ghost" className="text-primary">
+                      {username}
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/login">
+                    <Button variant="ghost" size="icon">
+                      <User className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                )}
+                <Link href="/cart">
+                  <Button variant="ghost" size="icon" className="relative">
+                    <ShoppingCart className="h-4 w-4" />
+                    {cartItemCount > 0 && (
+                      <Badge variant="destructive" className="absolute -top-0 -right-1 px-1 py-0 text-xs">
+                        {cartItemCount}
+                      </Badge>
+                    )}
                   </Button>
                 </Link>
-              ) : (
-                <Link href="/login">
-                  <Button variant="ghost" size="icon">
-                    <User className="h-4 w-4" />
-                  </Button>
-                </Link>
-              )}
-              <Link href="/cart">
-                <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className="h-4 w-4" />
-                  {cartItemCount > 0 && (
-                    <Badge variant="destructive" className="absolute -top-0 -right-1 px-1 py-0 text-xs">
-                      {cartItemCount}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
+              </div>
             </div>
           </div>
         </div>

@@ -22,12 +22,16 @@ interface OrderFilterParams {
   PageSize?: number;
   UserId?: number;
   Status?: string;
+  SortBy?: string;
+  IsDescending?: boolean;
 }
 const defaultParams: OrderFilterParams = {
   PageNumber: 1,
   PageSize: 10,
   UserId: undefined,
-  Status: undefined
+  Status: undefined,
+  SortBy: "OrderDate",
+  IsDescending: true
 };
 export const createOrder = async (data: OrderCreationDto) => {
   const response = await api.post("/api/order", data);

@@ -103,6 +103,12 @@ export default function CartPage() {
 
   // Handle checkout process
   const handleCheckout = async () => {
+    const token = Cookies.get("token");
+    if (!token) {
+      toast.warning("Please login to checkout");
+      router.push("/login");
+      return;
+    }
     // Get cart items from localStorage
     const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
 

@@ -11,9 +11,9 @@ const items = [
 
 export default function Hero() {
   return (
-    <div className="grid grid-cols-4 gap-2 h-full">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 h-full">
       {/* Left large image */}
-      <Link href={items[0].link} className="col-span-2 relative overflow-hidden group block">
+      <Link href={items[0].link} className="col-span-1 md:col-span-2 relative overflow-hidden group block">
         <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-110 group-hover:brightness-75">
           <Image
             src={items[0].src}
@@ -29,7 +29,7 @@ export default function Hero() {
       </Link>
 
       {/* Right images with text */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-2 col-span-2">
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 col-span-1 md:col-span-2">
         {items.slice(1).map((item, index) => (
           <Link key={index} href={item.link} className="relative overflow-hidden group block">
             <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-110 group-hover:brightness-75">
